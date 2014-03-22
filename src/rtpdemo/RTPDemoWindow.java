@@ -55,7 +55,7 @@ public class RTPDemoWindow extends JFrame
         @Override
         public void run()
         {
-            rtp.addPoint(new Point2D.Double(Math.random(), time), "rand");
+            rtp.addPoint(new Point2D.Double(time, Math.random()), "rand");
             rtp.repaint();
             time += 500;
         }

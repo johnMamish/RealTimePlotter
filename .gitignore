@@ -1,0 +1,21 @@
+#Netbeans Specific
+core
+nbproject/*
+!nbproject/project.properties
+!nbproject/project.xml
+
+#ant specific
+build/
+dist/
+
+#class files
+*.class
+
+#general swap/backup files
+*.so
+*.log
+*.out
+*~
+*.swp
+*.DS_Store
+*.lock

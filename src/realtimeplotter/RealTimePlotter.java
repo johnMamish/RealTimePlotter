@@ -26,12 +26,17 @@ public class RealTimePlotter extends JComponent
     private final ArrayList<DataSet> thePlots;
     
     //variables for holding range information.
-    int xmin;
-    int xmax;
-    int xscale;
-    int ymin;
-    int ymax;
-    int yscale;
+    double xmin;
+    double xmax;
+    double xscale = 0.1;      //units of scale is pixels/unit
+    double ymin;
+    double ymax;
+    double yscale = 500;
+    
+    //flags
+    //do we want to scroll the x range forward as we add new points beyond the
+    //end range?
+    boolean lockx = true;
     
     //basic constructor
     public RealTimePlotter()
@@ -42,11 +47,11 @@ public class RealTimePlotter extends JComponent
         
         this.xmin = 0;
         this.xmax = 10;
-        this.xscale = 1;
+        this.xscale = 0.1;
         
         this.ymin = 0;
         this.ymax = 10;
-        this.yscale = 1;
+        this.yscale = 500;
     }
     
     //creates a new, empty plot in the rtp
@@ -92,18 +97,58 @@ public class RealTimePlotter extends JComponent
         //draw stuff.
         g2.setColor(new Color(0x00000000));
         
+        //Plot data points.
         DataSet d;
-        int x = 10;
-        int y = 50;
+        int textx = 10;
+        int texty = 50;
         for(Iterator<DataSet> it = this.thePlots.iterator(); it.hasNext();)
         {
             d = it.next();
+            g2.setColor(d.getColor());
             
-            for(int i = 0; i < d.length(); i++)
+            if(d.length() > 0)
             {
-                g2.drawString(d.get(i).toString(), x, y);
-                y += 30;
+                Point2D p = this.pointToPixel(d.get(0));
+                Point2D pnext;
+                for(int i = 1; i < d.length(); i++)
+                {
+                    //convert point
+                    pnext = this.pointToPixel(d.get(i));
+                    
+                    //draw
+                    g2.drawLine((int)p.getX(), (int)p.getY(),
+                                (int)pnext.getX(), (int)pnext.getY());
+                    
+                    //debug text
+                    //g2.drawString(p.toString(), textx, texty);
+                    //texty += 20;
+                    
+                    //exchange points to avoid extra recalcs
+                    p = pnext;
+                }
             }
         }
+    }
+    
+    /**
+     * @brief converts a given point to the absolute pixel position on the
+     *        screen.
+     * 
+     * @param p Point to convert.
+     * 
+     * @return returns the pixel corresponding to Point2D p.
+     */
+    public Point2D.Double pointToPixel(Point2D.Double p)
+    {
+        //instantiate new point for result.
+        Point2D.Double res = new Point2D.Double();
+        
+        //calcualate conversion
+        double xval = p.getX()*this.xscale + 30;
+        double yval = p.getY()*this.yscale + 30;
+        res.setLocation(xval, this.getHeight() - yval);
+        
+        //return
+        return res;
     }
 }

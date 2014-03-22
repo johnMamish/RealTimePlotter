@@ -48,7 +48,7 @@ public class DataSet
     }
     
     //gets the ith data point
-    public Point2D get(int i)
+    public Point2D.Double get(int i)
     {
         //is this considered good oop style?!  This makes my eyes hurt.
         return new Point2D.Double(this.data.get(i).getX(), this.data.get(i).getY());
