@@ -6,6 +6,8 @@
 
 package rtpdemo;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import realtimeplotter.*;
 
 /**
@@ -17,6 +19,15 @@ public class main
     public static void main(String[] args)
     {
         System.out.println("");
-        RealTimePlotter rtp = new RealTimePlotter();
+        RTPDemoWindow d = new RTPDemoWindow(500);
+        d.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                System.exit(0);
+            }
+        });
+        d.setVisible(true);
     }
 }

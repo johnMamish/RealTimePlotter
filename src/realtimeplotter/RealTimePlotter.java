@@ -8,6 +8,7 @@ package realtimeplotter;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,9 +54,6 @@ public class RealTimePlotter extends JComponent
     {
         //add plot to list
         this.thePlots.add(new DataSet(plotName, new Color(0x00ff0000)));
-        
-        //probably need to redraw now.
-        this.repaint();
     }
     
     //various accessor routines for the data sets
@@ -87,7 +85,25 @@ public class RealTimePlotter extends JComponent
     {
         super.paint(g);
         
-        //draw stuff.
+        //cast g
+        Graphics2D g2 = (Graphics2D)g;
+        System.out.println("hello");
         
+        //draw stuff.
+        g2.setColor(new Color(0x00000000));
+        
+        DataSet d;
+        int x = 10;
+        int y = 50;
+        for(Iterator<DataSet> it = this.thePlots.iterator(); it.hasNext();)
+        {
+            d = it.next();
+            
+            for(int i = 0; i < d.length(); i++)
+            {
+                g2.drawString(d.get(i).toString(), x, y);
+                y += 30;
+            }
+        }
     }
 }

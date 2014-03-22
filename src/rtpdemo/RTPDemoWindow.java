@@ -6,7 +6,10 @@
 
 package rtpdemo;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.geom.Point2D;
+import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JFrame;
 import realtimeplotter.*;
@@ -15,18 +18,46 @@ import realtimeplotter.*;
  *
  * @author John Mamish
  */
-public class RTPWindow extends JFrame
+public class RTPDemoWindow extends JFrame
 {
     private RealTimePlotter rtp;
+    private final int rate;
     
-    
+    public RTPDemoWindow(int rate)
+    {
+        //initialize private vars
+        this.rate = rate;
+        this.rtp = new RealTimePlotter();
+        
+        //set up realtime plotter
+        this.rtp.addPlot("rand");
+        
+        //layout code
+        this.setLayout(new GridBagLayout());
+        
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.weighty = 1;
+        this.add(rtp, c);
+        
+        Timer dataTimer = new Timer();
+        dataTimer.scheduleAtFixedRate(new PointAdder(), 500, 500);
+    }
     
     class PointAdder extends TimerTask
     {
+        private int time = 0;
+        
         @Override
         public void run()
         {
-            rtp.addPoint(new Point2D.Double(Math.random(), this.scheduledExecutionTime()), "rand");
+            rtp.addPoint(new Point2D.Double(Math.random(), time), "rand");
+            rtp.repaint();
+            time += 500;
         }
     }
 }
