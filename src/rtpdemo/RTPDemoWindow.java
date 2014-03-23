@@ -6,6 +6,7 @@
 
 package rtpdemo;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.geom.Point2D;
@@ -31,6 +32,8 @@ public class RTPDemoWindow extends JFrame
         
         //set up realtime plotter
         this.rtp.addPlot("rand");
+        this.rtp.setColor("rand", new Color(0x00ff0000));
+        this.rtp.setAutoScroll();
         
         //layout code
         this.setLayout(new GridBagLayout());
@@ -45,7 +48,7 @@ public class RTPDemoWindow extends JFrame
         this.add(rtp, c);
         
         Timer dataTimer = new Timer();
-        dataTimer.scheduleAtFixedRate(new PointAdder(), 500, 500);
+        dataTimer.scheduleAtFixedRate(new PointAdder(), 200, 150);
     }
     
     class PointAdder extends TimerTask
@@ -55,7 +58,7 @@ public class RTPDemoWindow extends JFrame
         @Override
         public void run()
         {
-            rtp.addPoint(new Point2D.Double(time, Math.random()), "rand");
+            rtp.addPoint("rand", new Point2D.Double(time, Math.random()));
             rtp.repaint();
             time += 500;
         }
